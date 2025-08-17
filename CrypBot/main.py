@@ -40,15 +40,23 @@ async def cmd_help(ctx):
     await ctx.reply("".join(help_text))
 
  
-@bot.command()          # need to fix, give parse JSON for coin profile, read docs  
+@bot.command()          # need to fix, give parse JSON for coin profile, read docs, make embed   
 async def lookup(ctx, coin:str): 
     try:
-        data = cg.get_price(ids=coin, vs_currencies='usd')
-        if coin.lower() in data: 
-            price = data[coin.lower()]['usd']
-            await ctx.reply(f"The current price of {coin} is ${price:.2f} USD.") 
-        else: 
-            await ctx.reply(f"Could not find data for {coin}. Please check the coin name and try again.")  
+        
+       c = cg.get_coin_by_id(coin.lower())
+       embed = discord.Embed(
+           title=f"{c["name"]} ({c["symbol"].upper()})",
+           description=f"Rank #{c['market_cap_rank']}"
+        )
+        
+       embed.add_field(name="Current Price (USD)", value=f"${c['market_data']['current_price']['usd']:.2f}", inline=False) 
+       embed.add_field(name="Market Cap (USD)", value=f"${c["market_data"]['market_cap']['usd']:.2f}", inline=False) 
+       embed.add_field(name="Price Change (24h)", value=f"{c['market_data']['price_change_percentage_24h']:.2f}%", inline=False)
+       embed.add_field(name="All Time High (USD)", value=f"${c['market_data']['ath']['usd']:.2f}", inline=False) 
+      
+       await ctx.reply(embed=embed) 
+       
     except Exception as e: 
         await ctx.reply(f"Error fetching coin data.")
         print(e) 
