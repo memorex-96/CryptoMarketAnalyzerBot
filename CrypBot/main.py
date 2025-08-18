@@ -1,9 +1,12 @@
 import discord 
-from discord.ext import commands
+from discord.ext import commands, tasks
 import logging 
 from dotenv import load_dotenv
 import os
 from pycoingecko import CoinGeckoAPI
+from datetime import datetime 
+from market_scraper import get_coin_data
+from math_models import projections  
 
 cg = CoinGeckoAPI() 
 
@@ -20,11 +23,27 @@ bot = commands.Bot(command_prefix= '/', intents=intents)
 @bot.event
 async def on_ready(): 
     print(f"We are ready to go, in {bot.user.name}!")  # modify 
-
+    daily.start() 
 
 # Daily Market Data Announcement 
-
-
+@tasks.loop(minutes=1)
+async def daily():
+   # format for retrieval information:  
+   # Crypto Daily Market Update:
+   #- XRP: $0.50, (^ 2.3%) | Projected bullish next 7 days 
+   #- ADA: $0.29, (\downarrow 1.1%) | projected neutral  
+   #- HBAR: $0.06, (\uparrow 4.8%) | Strong bullish trend  
+    
+     
+    now = datetime.now()
+    if now.hour == 9 and now.minute == 0:
+        print("Time hit!")  
+        channel = bot.get_channel(1406712918590095421) 
+        if channel: 
+            await channel.send("Good morning! Here is your daily crypto market update.") 
+            #embed data here, maybe use a function to get market data
+    
+ 
 
 # commands
 @bot.command() 
