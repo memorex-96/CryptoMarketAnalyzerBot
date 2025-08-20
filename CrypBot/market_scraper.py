@@ -12,12 +12,24 @@ def get_coin_data(coin: str):
     try: 
         #get data 
         coin_data = cd.get_coin_by_id(coin.lower())
+        
         name = coin_data['name'] 
         symbol = coin_data['symbol'].upper() 
         current_price = coin_data['market_data']['current_price']['usd']
-        trend = coin_data['market_data']['trend_24h']  
+        trend = coin_data['market_data'].get('trend_24h', 'N/A') 
         price_change = coin_data['market_data']['price_change_percentage_24h'] 
+        market_cap_rank = coin_data['market_data']['market_cap_rank'] 
+        #embed_result = [name, symbol, current_price, trend, price_change, market_cap_rank]
         
+        return {
+            "name" : name, 
+            "symbol" : symbol, 
+            "current_price" : current_price, 
+            "trend" : trend, 
+            "price_change" : price_change, 
+            "market_cap_rank" : market_cap_rank
+        }    
+         
     except Exception as e: 
         print(f"Error fetching data for {coin}: {e}") 
         return None

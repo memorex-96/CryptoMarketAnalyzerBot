@@ -36,14 +36,55 @@ async def daily():
     
      
     now = datetime.now()
-    if now.hour == 9 and now.minute == 0:
+    if now.hour == 15 and now.minute == 26:
         print("Time hit!")  
         channel = bot.get_channel(1406712918590095421) 
         if channel: 
-            await channel.send("Good morning! Here is your daily crypto market update.") 
-            #embed data here, maybe use a function to get market data
-    
- 
+            await channel.send("Good morning! Here is your daily crypto market update.\n") 
+            #embed data here, maybe use a function to get market data 
+            btc = get_coin_data("BitCoin")
+            ADA = get_coin_data("Cardano")
+            XRP = get_coin_data("XRP")
+            HBAR = get_coin_data("Hedera") 
+            # add more if necessary (make it so if coins get more popular, they get automatically announced) 
+            if btc: 
+                btc_embed = discord.Embed(
+                    title=f"{btc['name']} ({btc['symbol'].upper()})", 
+                    description=f"Rank #{btc['market_cap_rank']}"
+                )
+                btc_embed.add_field(name='Price', value=f"${btc['current_price']:.2f}", inline=True)
+                btc_embed.add_field(name='24h Change', value=f"{btc['price_change']}%", inline=True)
+                btc_embed.add_field(name='Trend', value=btc['trend'], inline=True) 
+                await channel.send(embed=btc_embed)
+            if ADA: 
+                ada_embed = discord.Embed(
+                    title=f"{ADA['name']} ({ADA['symbol'].upper()})", 
+                    description=f"Rank #{ADA['market_cap_rank']}"
+                )
+                ada_embed.add_field(name='Price', value=f"${btc['current_price']:.2f}", inline=True)
+                ada_embed.add_field(name='24h Change', value=f"{btc['price_change']}%", inline=True)
+                ada_embed.add_field(name='Trend', value=btc['trend'], inline=True) 
+                await channel.send(embed=ada_embed) 
+            if XRP: 
+                xrp_embed = discord.Embed(
+                    title=f"{XRP['name']} ({XRP['symbol'].upper()})", 
+                    description=f"Rank #{ADA['market_cap_rank']}"
+                )
+                xrp_embed.add_field(name='Price', value=f"${btc['current_price']:.2f}", inline=True)
+                xrp_embed.add_field(name='24h Change', value=f"{btc['price_change']}%", inline=True)
+                xrp_embed.add_field(name='Trend', value=btc['trend'], inline=True) 
+                await channel.send(embed=xrp_embed) 
+            if HBAR: 
+                hbar_embed = discord.Embed(
+                    title=f"{HBAR['name']} ({HBAR['symbol'].upper()})", 
+                    description=f"Rank #{HBAR['market_cap_rank']}"
+                )
+                hbar_embed.add_field(name='Price', value=f"${btc['current_price']:.2f}", inline=True)
+                hbar_embed.add_field(name='24h Change', value=f"{btc['price_change']}%", inline=True)
+                hbar_embed.add_field(name='Trend', value=btc['trend'], inline=True) 
+                await channel.send(embed=hbar_embed) 
+                
+            
 
 # commands
 @bot.command() 
@@ -59,7 +100,7 @@ async def cmd_help(ctx):
     await ctx.reply("".join(help_text))
 
  
-@bot.command()          # need to fix, give parse JSON for coin profile, read docs, make embed   
+@bot.command()            
 async def lookup(ctx, coin:str): 
     try:
         
@@ -82,6 +123,10 @@ async def lookup(ctx, coin:str):
 
 # /project command 
 # access another file for mathmatical calculations 
-
+@bot.command() 
+async def project(ctx, coin:str, amount, timescale): 
+   temp = projections(coin, amount, timescale) 
+   ctx.send(temp)  
+    
 bot.run(token, log_handler=handler, log_level=logging.DEBUG) 
 
