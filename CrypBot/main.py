@@ -26,7 +26,7 @@ async def on_ready():
     daily.start() 
 
 # Daily Market Data Announcement 
-@tasks.loop(minutes=1)
+@tasks.loop(seconds=1)
 async def daily():
    # format for retrieval information:  
    # Crypto Daily Market Update:
@@ -36,7 +36,7 @@ async def daily():
     
      
     now = datetime.now()
-    if now.hour == 15 and now.minute == 26:
+    if now.hour == 9 and now.minute == 0:
         print("Time hit!")  
         channel = bot.get_channel(1406712918590095421) 
         if channel: 
@@ -47,6 +47,8 @@ async def daily():
             XRP = get_coin_data("XRP")
             HBAR = get_coin_data("Hedera") 
             # add more if necessary (make it so if coins get more popular, they get automatically announced) 
+            # Change this to one embed
+            # convert to correct format 
             if btc: 
                 btc_embed = discord.Embed(
                     title=f"{btc['name']} ({btc['symbol'].upper()})", 
@@ -65,6 +67,9 @@ async def daily():
                 ada_embed.add_field(name='24h Change', value=f"{btc['price_change']}%", inline=True)
                 ada_embed.add_field(name='Trend', value=btc['trend'], inline=True) 
                 await channel.send(embed=ada_embed) 
+           
+           # remove/fix, they are not recognized in CoinGecko  
+            
             if XRP: 
                 xrp_embed = discord.Embed(
                     title=f"{XRP['name']} ({XRP['symbol'].upper()})", 
