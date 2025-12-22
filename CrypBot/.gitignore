@@ -1,3 +1,4 @@
 .env
 tutorial-function-examples.txt
 discord.log
+models/*.gguf

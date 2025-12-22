@@ -1,8 +1,38 @@
 from pycoingecko import CoinGeckoAPI
 import numpy as np 
 import math 
+from openai import OpenAI 
+import os 
+
+'''
+    Turn Math Models into Open AI area for usibng GPT to help with analysis and predictions
+'''
 
 
+# TODO: get input from user, and use openai to generate anaylsis based on that input
+#   Way to do that is to just use func params as user input, and format into prompt for openai
+
+
+def print_analysis():
+   
+
+    client = OpenAI(api_key = os.environ.get("OPENAI_API_KEY"))
+    
+    completion = client.chat.completions.create(
+     model="gpt-4o", 
+     messages=[
+        {"role": "system", "content": "You are a financial analyst specializing in cryptocurrency markets."}, 
+        {"role": "system", "content": "Given coin type, investment amount, and timeframe, provide a detailed analysis of potential returns, risks, and market trends."},
+        {"role": "user", "content": "If I invest $10 into Bitcoin, based on current market trends, after 30 days, what could I expect in terms of returns and risks?"}
+     ]
+    )
+    print(completion.choices[0].message.content)
+
+
+
+
+# to be deleted and turned into openai implementation
+'''
 # functions for projection calculation pipeline 
 
 #coin_prices arg = arr of prices not dict 
@@ -22,7 +52,13 @@ def log_returns(coin_prices):
     return log_return   
 
 #Normalize Z-Score
-def normalize(r_series): return 0 # place-holder 
+def normalize(r_series): 
+    z_score = 0
+    r_mean = np.mean(r_series) 
+    r_series_dev = np.standard_deviation(r_series) 
+    for i in r_series: 
+        z_score = ((r_series[i] - r_mean) / r_series_dev) 
+    return 0 # place-holder 
     
 # ADF 
 def stationary_check(r_series): return 0 # place-holder 
@@ -45,4 +81,4 @@ def projections(coin: str, inv_amt, timeframe):
         return None  
          
     
-         
+'''       

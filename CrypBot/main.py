@@ -6,11 +6,37 @@ import os
 from pycoingecko import CoinGeckoAPI
 from datetime import datetime 
 from market_scraper import get_coin_data
-from math_models import projections  
+#from math_models import projections  ; going to be openai implementation
+from math_models import print_analysis 
+from openai import OpenAI
+from llama_cpp import Llama 
+from pathlib import Path 
+
+load_dotenv()
+
+#resolve llama model path
+BASE_DIR = Path(__file__).resolve().parent 
+MODEL_PATH = BASE_DIR / "models" / "REPLACE_WITH_MODEL.gguf"    # rememebr to replace with model when downloaded  
+
+llm = Llama(
+    model_path=str(MODEL_PATH), 
+    n_ctx=2048,
+    n_threads=os.cpu_count() // 2   
+)
+
+
+''' going to use llama, open source  
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+response = client.responses.create( 
+    model="gpt-4.1-mini", 
+    input="Write a one sentence summary about cryptocurrency market trends." 
+)
+print(response.output_text)
+'''
+
 
 cg = CoinGeckoAPI() 
 
-load_dotenv()
 token = os.getenv('DISCORD_TOKEN')
 
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
@@ -99,7 +125,7 @@ async def cmd_help(ctx):
         "Here are the commands you can use: \n", 
         "/cmd_help - Show this help message\n",
         "/lookup <coin_name> - Get the current price of a cryptocurrency in USD\n",
-        "To be added:\n", 
+        "\n**To be implemented with OpenAI:**\n", 
         "/project <coin_name> <amount> <timeframe> - Get coin investment details over a specified timeframe\n",   
     )
     await ctx.reply("".join(help_text))
@@ -126,12 +152,15 @@ async def lookup(ctx, coin:str):
         await ctx.reply(f"Error fetching coin data.")
         print(e) 
 
+
+
 # /project command 
 # access another file for mathmatical calculations 
+'''
 @bot.command() 
 async def project(ctx, coin:str, amount, timescale): 
    temp = projections(coin, amount, timescale) 
    ctx.send(temp)  
-    
+'''
+  
 bot.run(token, log_handler=handler, log_level=logging.DEBUG) 
-
