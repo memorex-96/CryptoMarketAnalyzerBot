@@ -3,7 +3,9 @@ import numpy as np
 import math 
 from openai import OpenAI 
 import os 
-
+from llamma_cpp import Llama
+from pathlib import Path
+import json 
 '''
     Turn Math Models into Open AI area for usibng GPT to help with analysis and predictions
 '''
@@ -12,22 +14,19 @@ import os
 # TODO: get input from user, and use openai to generate anaylsis based on that input
 #   Way to do that is to just use func params as user input, and format into prompt for openai
 
+# function: coin info from coingecko, convert to json for llama 
+# use llama in this file and not main 
 
-def print_analysis():
-   
 
-    client = OpenAI(api_key = os.environ.get("OPENAI_API_KEY"))
-    
-    completion = client.chat.completions.create(
-     model="gpt-4o", 
-     messages=[
-        {"role": "system", "content": "You are a financial analyst specializing in cryptocurrency markets."}, 
-        {"role": "system", "content": "Given coin type, investment amount, and timeframe, provide a detailed analysis of potential returns, risks, and market trends."},
-        {"role": "user", "content": "If I invest $10 into Bitcoin, based on current market trends, after 30 days, what could I expect in terms of returns and risks?"}
-     ]
-    )
-    print(completion.choices[0].message.content)
+#resolve llama model path
+BASE_DIR = Path(__file__).resolve().parent 
+MODEL_PATH = BASE_DIR / "models" / "REPLACE_WITH_MODEL.gguf"    # rememebr to replace with model when downloaded  
 
+llm = Llama(
+    model_path=str(MODEL_PATH), 
+    n_ctx=2048,
+    n_threads=os.cpu_count() // 2   
+)
 
 
 

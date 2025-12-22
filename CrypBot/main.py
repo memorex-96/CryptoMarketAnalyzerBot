@@ -9,21 +9,13 @@ from market_scraper import get_coin_data
 #from math_models import projections  ; going to be openai implementation
 from math_models import print_analysis 
 from openai import OpenAI
+
+# going to need prompting and processing. not sure where to separate it 
 from llama_cpp import Llama 
 from pathlib import Path 
+import json 
 
 load_dotenv()
-
-#resolve llama model path
-BASE_DIR = Path(__file__).resolve().parent 
-MODEL_PATH = BASE_DIR / "models" / "REPLACE_WITH_MODEL.gguf"    # rememebr to replace with model when downloaded  
-
-llm = Llama(
-    model_path=str(MODEL_PATH), 
-    n_ctx=2048,
-    n_threads=os.cpu_count() // 2   
-)
-
 
 ''' going to use llama, open source  
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
