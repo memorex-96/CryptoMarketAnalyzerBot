@@ -7,11 +7,11 @@ from pycoingecko import CoinGeckoAPI
 from datetime import datetime 
 from market_scraper import get_coin_data
 #from math_models import projections  ; going to be openai implementation
-from math_models import print_analysis 
+#from math_models import print_analysis 
 from openai import OpenAI
 
 # going to need prompting and processing. not sure where to separate it 
-from llama_cpp import Llama 
+#from llama_cpp import Llama 
 from pathlib import Path 
 import json 
 

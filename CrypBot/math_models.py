@@ -3,20 +3,15 @@ import numpy as np
 import math 
 from openai import OpenAI 
 import os 
-from llamma_cpp import Llama
+from llama_cpp import Llama
 from pathlib import Path
 import json 
-'''
-    Turn Math Models into Open AI area for usibng GPT to help with analysis and predictions
-'''
-
 
 # TODO: get input from user, and use openai to generate anaylsis based on that input
 #   Way to do that is to just use func params as user input, and format into prompt for openai
 
 # function: coin info from coingecko, convert to json for llama 
 # use llama in this file and not main 
-
 
 #resolve llama model path
 BASE_DIR = Path(__file__).resolve().parent 
@@ -27,7 +22,6 @@ llm = Llama(
     n_ctx=2048,
     n_threads=os.cpu_count() // 2   
 )
-
 
 
 # to be deleted and turned into openai implementation
